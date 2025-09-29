@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "clean-install": "node -e \"fs.rmSync('node_modules', { recursive: true, force: true }); fs.rmSync('package-lock.json', { force: true }); fs.rmSync('tmp', { recursive: true, force: true });\" && npm install",
-    "lint": "eslint \"**/*.js\" --fix && prettier . --write",
-    "lint-check": "eslint \"**/*.js\" && prettier . --check",
+    "lint": "eslint \"**/*.js\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json,md,css,html}\" --write",
+    "lint-check": "eslint \"**/*.js\" && prettier \"**/*.{js,jsx,ts,tsx,json,md,css,html}\" --check",
     "postinstall": "patch-package && npm run scss",
     "prepare": "husky",
     "scss": "sass --no-source-map --silence-deprecation=import --quiet-deps --load-path=./ --update ./public/css:./public/css",
