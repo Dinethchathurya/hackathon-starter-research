@@ -19,7 +19,8 @@
     "prepare": "husky",
     "scss": "sass --no-source-map --silence-deprecation=import --quiet-deps --load-path=./ --update ./public/css:./public/css",
     "start": "npm run scss && node app.js",
-    "test": "c8 --temp-directory tmp/coverage mocha --timeout=60000 --exit"
+    "test": "c8 --temp-directory tmp/coverage mocha --timeout=60000 --exit",
+    "build": "npm run scss && npm prune --omit=dev"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.1",

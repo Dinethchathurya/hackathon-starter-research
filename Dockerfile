@@ -1,18 +1,16 @@
-FROM node:22-slim
+FROM node:22-alpine
 
 WORKDIR /starter
+
 ENV NODE_ENV development
 
-COPY .env.example /starter/.env.example
-COPY . /starter
+COPY . .
 
-RUN npm install -g pm2 && \
-    if [ "$NODE_ENV" = "production" ]; then \
-        npm install --omit=dev; \
-    else \
-        npm install; \
-    fi
+RUN npm install -g pm2 && npm install
+EXPOSE 8080 
+
+RUN npm build
 
 CMD ["pm2-runtime","app.js"]
 
-EXPOSE 8080
+
