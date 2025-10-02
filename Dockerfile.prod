@@ -1,24 +1,36 @@
-# ---------- Build stage (has toolchain) ----------
-FROM node:22-slim AS build
-WORKDIR /app
+# FROM cgr.dev/chainguard/node:latest
+# WORKDIR /starter
+# ENV NODE_ENV production
 
-# Copy source and build assets (SCSS -> CSS)
+# COPY . /starter
+
+# RUN npm install -g pm2 && npm install
+# CMD ["pm2-runtime","app.js"]
+
+# EXPOSE 8080
+
+
+
+# single-stage, production-oriented
+FROM node:22-alpine
+WORKDIR /starter
+
+ENV NODE_ENV=production PORT=8080
+
+# 1) install ALL deps so postinstall + sass can run
+#    (your project’s postinstall runs patch-package + sass)
+
+COPY package.json ./
+RUN npm install
+
+# 2) copy source and build assets, then prune dev deps away
 COPY . .
+RUN npm run scss \
+ && npm prune --omit=dev \
+ && npm i -g pm2 \
+ && chown -R nonroot:nonroot /starter
 
-RUN npm ci --omit=dev && npm run scss
 
-# ---------- Runtime stage (minimal, non-root) ----------
-FROM cgr.dev/chainguard/node:latest
-WORKDIR /app
-
-ENV NODE_ENV=production \
-    PORT=8080
-
-# Copy the app owned by the non-root user that Chainguard uses
-COPY --chown=nonroot:nonroot --from=build /app /app
-
-# Explicitly set the user (Chainguard defaults to nonroot, this is just clear)
 USER nonroot
-
 EXPOSE 8080
-CMD ["node", "app.js"]
+CMD ["pm2-runtime","app.js"]

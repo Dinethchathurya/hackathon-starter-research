@@ -30,3 +30,9 @@ tmp
 results
 pids
 .rag_input
+.gitattributes
+.gitignore
+Dockerfile
+Dockerfile.dev
+Dockerfile.test
+.dockerignore
